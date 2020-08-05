@@ -5,6 +5,9 @@ using Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data {
+    /// <summary>
+    /// Abstract data access from controller
+    /// </summary>
     public class ProductRepository : IProductRepository {
 
         private readonly StoreContext _storeContext;
@@ -27,8 +30,7 @@ namespace Infrastructure.Data {
         }
 
         public async Task<IReadOnlyList<ProductBrand>> GetProductBrandsAsync () {
-            return await _storeContext.ProductBrands
-                .ToListAsync ();
+            return await _storeContext.ProductBrands.ToListAsync ();
         }
 
         public async Task<IReadOnlyList<ProductType>> GetProductTypesAsync () {

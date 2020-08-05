@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Data.Config {
+    /// <summary>
+    /// Configure constraint for entities in database 
+    /// </summary>
     public class ProductConfiguration : IEntityTypeConfiguration<Product> {
         public void Configure (EntityTypeBuilder<Product> builder) {
             builder.Property (p => p.Id).IsRequired ();

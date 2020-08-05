@@ -1,11 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -14,12 +11,14 @@ namespace API {
     public class Program {
         public static async Task Main (string[] args) {
             var host = CreateHostBuilder (args).Build ();
+            // Apply migrations and create database if it doesn't exist.
             using (var scope = host.Services.CreateScope ()) {
                 var services = scope.ServiceProvider;
                 var loggerFactory = services.GetRequiredService<ILoggerFactory> ();
                 try {
                     var context = services.GetRequiredService<StoreContext> ();
                     await context.Database.MigrateAsync ();
+                    // seed data into database using json files
                     await StoreContextSeed.SeedAsync (context, loggerFactory);
                 } catch (Exception e) {
                     var logger = loggerFactory.CreateLogger<Program> ();

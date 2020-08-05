@@ -8,11 +8,15 @@ using Core.Entities;
 using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Data {
+    /// <summary>
+    /// Read json data from SeedData file, Deserialize it and add it to database
+    /// </summary>
     public class StoreContextSeed {
         public static async Task SeedAsync (StoreContext context, ILoggerFactory loggerFactory) {
             try {
+                string path = "../Infrastructure/Data/SeedData/";
                 if (!context.ProductBrands.Any ()) {
-                    var brandsDate = File.ReadAllText ("../Infrastructure/Data/SeedData/brands.json");
+                    var brandsDate = File.ReadAllText (path + "brands.json");
                     var brands = JsonSerializer.Deserialize<List<ProductBrand>> (brandsDate);
                     foreach (var item in brands) {
                         context.ProductBrands.Add (item);
@@ -20,7 +24,7 @@ namespace Infrastructure.Data {
                     await context.SaveChangesAsync ();
                 }
                 if (!context.ProductTypes.Any ()) {
-                    var TypesDate = File.ReadAllText ("../Infrastructure/Data/SeedData/types.json");
+                    var TypesDate = File.ReadAllText (path + "types.json");
                     var Types = JsonSerializer.Deserialize<List<ProductType>> (TypesDate);
                     foreach (var item in Types) {
                         context.ProductTypes.Add (item);
@@ -28,7 +32,7 @@ namespace Infrastructure.Data {
                     await context.SaveChangesAsync ();
                 }
                 if (!context.Products.Any ()) {
-                    var productsDate = File.ReadAllText ("../Infrastructure/Data/SeedData/products.json");
+                    var productsDate = File.ReadAllText (path + "products.json");
                     var products = JsonSerializer.Deserialize<List<Product>> (productsDate);
                     foreach (var item in products) {
                         context.Products.Add (item);

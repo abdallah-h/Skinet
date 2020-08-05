@@ -5,6 +5,7 @@ dotnet watch run
 dotnet add package Microsoft.EntityFrameworkCore --version
 dotnet add package Microsoft.EntityFrameworkCore.Sqlite --version
 dotnet add package Microsoft.EntityFrameworkCore.Design --version
+dotnet add package AutoMapper.Extensions.Microsoft.DependencyInjection
 
 // progects setup
 dotnet new classlib -o Core
