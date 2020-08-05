@@ -1,1 +1,1 @@
-# Skinet
+# Skinet E-Commerce App
