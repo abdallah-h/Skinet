@@ -17,8 +17,11 @@ namespace Infrastructure.Data {
             var query = inputQuery;
 
             if (spec.Criteria != null) {
+                // ex. of spec.Criteria is (p => p.ProductTypeId == id)
                 query = query.Where (spec.Criteria);
             }
+
+            // aggregate our include expressions and return it
             query = spec.Includes.Aggregate (query, (current, include) => current.Include (include));
             return query;
         }

@@ -1,13 +1,13 @@
+using API.Extensions;
 using API.Helpers;
+using API.Middleware;
 using AutoMapper;
-using Core.Interfaces;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace API {
     public class Startup {
@@ -19,26 +19,25 @@ namespace API {
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices (IServiceCollection services) {
+
             services.AddControllers ();
-
             services.AddAutoMapper (typeof (MappingProfiles));
-
             // configure database context as a service
             services.AddDbContext<StoreContext> (x =>
                 x.UseSqlite (_configuration.GetConnectionString ("DefaultConnection"))
             );
 
-            // Add Repository as a service uppon http request
-            services.AddScoped<IProductRepository, ProductRepository> ();
+            services.AddApplicationServices ();
+            services.AddSwaggerDocumentation ();
 
-            services.AddScoped (typeof (IGenericRepository<>), typeof (GenericRepository<>));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure (IApplicationBuilder app, IWebHostEnvironment env) {
-            if (env.IsDevelopment ()) {
-                app.UseDeveloperExceptionPage ();
-            }
+            // handle Exception using ExceptionMiddleware class
+            app.UseMiddleware<ExceptionMiddleware> ();
+
+            app.UseStatusCodePagesWithReExecute ("/errors/{0}");
 
             app.UseHttpsRedirection ();
 
@@ -48,6 +47,8 @@ namespace API {
             app.UseStaticFiles ();
 
             app.UseAuthorization ();
+
+            app.UseSwaggerDocumentation ();
 
             app.UseEndpoints (endpoints => {
                 endpoints.MapControllers ();
