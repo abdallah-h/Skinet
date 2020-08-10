@@ -8,7 +8,7 @@ namespace Infrastructure.Data {
     /// specification evaluater that takes a list of queries and expressions
     /// to evalute them and generates iqueryable
     /// this class act as Include in ProductRepository class 
-    /// Include (p => p.ProductBrand) and Include (p => p.ProductType)
+    /// ex. Include (p => p.ProductBrand) and Include (p => p.ProductType)
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     public class SpecificationEvaluator<TEntity> where TEntity : BaseEntity {
@@ -19,6 +19,18 @@ namespace Infrastructure.Data {
             if (spec.Criteria != null) {
                 // ex. of spec.Criteria is (p => p.ProductTypeId == id)
                 query = query.Where (spec.Criteria);
+            }
+
+            if (spec.OrderBy != null) {
+                query = query.OrderBy (spec.OrderBy);
+            }
+
+            if (spec.OrderByDesc != null) {
+                query = query.OrderByDescending (spec.OrderByDesc);
+            }
+
+            if (spec.IsPagingEnable) {
+                query = query.Skip (spec.Skip).Take (spec.Take);
             }
 
             // aggregate our include expressions and return it
